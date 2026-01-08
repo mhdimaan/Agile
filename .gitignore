@@ -1,0 +1,12 @@
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules
+node_modules/
+
+# Python cache
+__pycache__/
