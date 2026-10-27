@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Life Hub</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#fff;--card:#E6EBEB;--tx:#17211f;--mu:#4a5858;--line:#cbd6d6;--inp:#fff;--pr:#0E8A8A;--on:#fff;--bar:#5B54E8;--ring:#B22FD0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1514;--card:#1b2423;--tx:#eaf1f0;--mu:#a3b2b0;--line:#2d3b39;--inp:#121a19;--bar:#8a84ff}}
+:root[data-theme="dark"]{--bg:#0f1514;--card:#1b2423;--tx:#eaf1f0;--mu:#a3b2b0;--line:#2d3b39;--inp:#121a19;--bar:#8a84ff}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;height:100%;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,sans-serif}
+#app{max-width:430px;height:100%;margin:0 auto;display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--bg)}
+main{flex:1;overflow-y:auto;padding:16px 16px 12px;display:flex;flex-direction:column;gap:12px}
+h1{font:600 24px Inter,sans-serif;margin:0}.mu{color:var(--mu);font-size:12px}
+.card{background:var(--card);border-radius:16px;padding:14px}
+.lbl{font:700 13px Inter,sans-serif;margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
+.row{display:flex;gap:12px}.row>*{flex:1;min-width:0}
+button{font-family:inherit;cursor:pointer;color:var(--tx)}
+.btn{min-height:44px;border:0;border-radius:12px;background:var(--pr);color:var(--on);font:600 15px Inter,sans-serif;padding:0 16px}
+.btn.sec{background:var(--inp);color:var(--tx);border:1px solid var(--line)}
+.sm{min-height:36px;padding:0 12px;font-size:13px}
+input{height:48px;border:1px solid var(--line);border-radius:10px;padding:0 14px;background:var(--inp);color:var(--tx);font:16px Inter,sans-serif;box-sizing:border-box;width:100%}
+label{display:flex;flex-direction:column;gap:6px;font:500 14px Inter,sans-serif}
+.bars{display:flex;align-items:flex-end;gap:6px}.col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
+.col i{display:block;width:100%;max-width:18px;border-radius:3px;background:var(--bar)}.col small{font-size:10px;color:var(--mu)}
+.todo{display:flex;align-items:center;gap:10px;min-height:40px;font:500 14px Inter,sans-serif}
+.todo button.ck{width:24px;height:24px;border-radius:50%;border:2px solid var(--pr);background:none;padding:0;color:var(--on);font-size:13px;line-height:1}
+.todo.d button.ck{background:var(--pr)}.todo.d span{text-decoration:line-through;color:var(--mu)}
+.todo .x{margin-left:auto;background:none;border:0;color:var(--mu);min-width:32px;min-height:32px}
+.seg{display:flex;gap:8px}.seg button{flex:1;min-height:44px;border-radius:10px;background:var(--inp);border:2px solid var(--line);font:500 13px Inter,sans-serif}.seg button.on{border-color:var(--pr)}
+.sw{display:flex;gap:12px}.sw button{width:40px;height:40px;border-radius:10px;border:3px solid var(--inp)}.sw button.on{border-color:var(--tx)}
+nav{display:flex;padding:6px 6px 8px;background:var(--bg);border-top:1px solid var(--line)}
+nav button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:52px;font:600 11px Inter,sans-serif;color:var(--mu)}
+nav button.on{color:var(--pr)}
+[data-skin="semi"] nav{background:#1f2a29;border-color:#1f2a29}[data-skin="semi"] nav button{color:#b8c6c4}[data-skin="semi"] nav button.on{color:#fff}
+[data-skin="semi"] .card{background:#cdd8d8}[data-skin="semi"][data-theme="dark"] .card{background:#243130}
+.bub{padding:10px 14px;border-radius:16px;font:400 14px/1.4 Inter,sans-serif;max-width:78%;white-space:pre-wrap}
+.bub.bot{align-self:flex-start;background:var(--inp);border:1px solid var(--line)}.bub.me{align-self:flex-end;background:var(--pr);color:var(--on)}
+.chip{border:1px solid var(--line);background:var(--inp);border-radius:16px;min-height:36px;padding:0 12px;font:500 13px Inter,sans-serif;white-space:nowrap}
+.tile{height:84px;border:0;border-radius:14px;background:var(--card);font:600 13px Inter,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.ov{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;z-index:5}
+.sheet{background:var(--bg);width:100%;border-radius:20px 20px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;box-sizing:border-box}
+#toast{position:absolute;left:50%;bottom:90px;transform:translateX(-50%);background:#17211f;color:#fff;padding:10px 16px;border-radius:20px;font:500 13px Inter,sans-serif;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
+.err{color:#c62828;font-size:13px;min-height:16px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dk=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const back=n=>{const d=new Date();d.setDate(d.getDate()-n);return d};
+const T=()=>dk(),days=n=>[...Array(n)].map((_,i)=>dk(back(n-1-i)));
+const dl=k=>'SMTWTFS'[new Date(k+'T00:00').getDay()];
+const COLORS=[['#7C5CE8','#fff'],['#0E8A8A','#fff'],['#F0A000','#17211f'],['#E8386A','#fff'],['#3B82E0','#fff']];
+const KC={Boxing:10,Weights:6,Skipping:12,Running:11,Calisthenics:8},ACT=['Boxing','Weights','Skipping','Running','Calisthenics'];
+const FACES=[['😞','Awful'],['🙁','Low'],['😐','Okay'],['🙂','Good'],['😄','Great']];
+function seed(){const st={},sl={},wk=[],m=[30,0,45,20,0,35,40,25,0,50,30,15,45];
+for(let i=1;i<=13;i++){const k=dk(back(i));st[k]=4000+((i*937)%5000);sl[k]=+(6+((i*7)%5)/2).toFixed(1);if(m[i-1])wk.push({id:i,d:k,t:['Running','Weights','Boxing'][i%3],m:m[i-1]})}
+st[T()]=1200;
+return{logged:false,user:'',theme:'system',pr:1,skin:'default',nav:'expanded',steps:st,sleep:sl,mood:{},water:{},wk,conn:{fit:false,health:false},plan:'Free',chat:[{r:'bot',t:'Hello! I can log workouts, water, sleep, mood and tasks. Try “Track my activity”.'}],
+todos:[['Review'],['Project'],['Reading'],['Journal'],['Sleep','sleep'],['Workout','wk'],['Drink Water','water']].map((x,i)=>({id:100+i,t:x[0],a:x[1],d:false}))}}
+let S;try{S=JSON.parse(localStorage.getItem('lifehub1'))}catch(e){}if(!S)S=seed();
+const U={tab:'home',sheet:null,q:'',pend:null};
+const save=()=>{try{localStorage.setItem('lifehub1',JSON.stringify(S))}catch(e){}};
+const wkMin=k=>S.wk.filter(w=>w.d===k).reduce((a,w)=>a+w.m,0);
+const cal=k=>Math.round(S.wk.filter(w=>w.d===k).reduce((a,w)=>a+w.m*(KC[w.t]||7),0)+(S.steps[k]||0)*.04);
+const done=t=>t.a==='sleep'?S.sleep[T()]!=null:t.a==='wk'?wkMin(T())>0:t.a==='water'?(S.water[T()]||0)>=8:t.d;
+const water=()=>S.water[T()]||0,steps=()=>S.steps[T()]||0;
+function logW(t,m){S.wk.push({id:Date.now(),d:T(),t,m})}
+function toast(m){const t=$('#toast');t.textContent=m;t.style.opacity=1;clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.opacity=0,1800)}
+function theme(){const dark=S.theme==='dark'||(S.theme==='system'&&matchMedia('(prefers-color-scheme: dark)').matches),r=document.documentElement,c=COLORS[S.pr];
+r.dataset.theme=dark?'dark':'light';r.dataset.skin=S.skin;r.style.setProperty('--pr',c[0]);r.style.setProperty('--on',c[1])}
+/* ---------- widgets ---------- */
+const barsH=(v,l,h=90)=>{const mx=Math.max(...v,1);return`<div class="bars" style="height:${h}px">${v.map((x,i)=>`<div class="col"><i style="height:${Math.max(4,x/mx*(h-16))}px"></i><small>${l[i]}</small></div>`).join('')}</div>`};
+const ring=(p,txt,sz=92)=>{const c=2*Math.PI*36,o=c*(1-Math.max(0,Math.min(1,p)));return`<svg width="${sz}" height="${sz}" viewBox="0 0 90 90" role="img" aria-label="${txt}"><circle cx="45" cy="45" r="36" fill="none" stroke="var(--line)" stroke-width="9"/><circle cx="45" cy="45" r="36" fill="none" stroke="var(--ring)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${o}" transform="rotate(-90 45 45)"/><text x="45" y="50" text-anchor="middle" font-size="${txt.length>5?13:16}" font-weight="700" fill="var(--tx)">${txt}</text></svg>`};
+const seg=(items,sel,a)=>`<div class="seg">${items.map((x,i)=>`<button class="${i===sel?'on':''}" data-a="${a}" data-v="${i}">${x}</button>`).join('')}</div>`;
+const todoH=()=>{const q=U.q.toLowerCase(),L=S.todos.filter(t=>t.t.toLowerCase().includes(q));return L.length?L.map(t=>{const d=done(t);return`<div class="todo ${d?'d':''}"><button class="ck" ${t.a?'disabled':''} data-a="todo" data-v="${t.id}" aria-label="Toggle ${esc(t.t)}">${d?'✓':''}</button><span>${esc(t.t)}</span>${t.a?'<small class="mu" style="margin-left:auto">auto</small>':`<button class="x" data-a="del" data-v="${t.id}" aria-label="Delete">✕</button>`}</div>`}).join(''):'<div class="mu">No matching tasks.</div>'};
+/* ---------- screens ---------- */
+function login(){return`<main style="justify-content:center;gap:18px"><div style="text-align:center"><div style="width:120px;height:120px;border-radius:50%;border:6px solid var(--pr);display:inline-flex;align-items:center;justify-content:center;font:700 20px Inter,sans-serif;color:var(--pr)">Life&nbsp;<span style="color:var(--mu);font-weight:400">hub</span></div><h1 style="margin-top:10px;font-weight:500">Life Hub</h1></div>
+<div class="card" style="display:flex;flex-direction:column;gap:14px;padding:22px"><div style="font:500 26px Inter,sans-serif;text-align:center">Login</div><label>Username<input id="u" autocomplete="username" value="${esc(S.user)}"></label><label>Password<input id="p" type="password" autocomplete="current-password" data-e="login"></label><div class="err" id="err"></div><button class="btn" data-a="login">Submit</button><button class="btn sec" data-a="help">Help</button></div></main>`}
+function home(){const h=new Date().getHours(),g=h<12?'Morning':h<17?'Afternoon':'Evening',ds=days(7),m=S.mood[T()],sl=S.sleep[T()],w=water();
+return`<main><div><div class="mu">${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</div><h1>Good ${g} ${esc(S.user||'user')}</h1></div>
+<input id="q" placeholder="Search tasks" aria-label="Search tasks" value="${esc(U.q)}" style="height:44px">
+<div class="card"><div class="lbl">Calories Burned<span class="mu">Today ${cal(T())} kcal</span></div>${barsH(ds.map(cal),ds.map(dl))}</div>
+<div class="row"><div class="card" style="text-align:center"><div class="lbl">Steps</div>${ring(steps()/8000,steps().toLocaleString('en-US'))}<button class="btn sm" style="margin-top:8px" data-a="steps">+500</button></div>
+<div class="card"><div class="lbl">Mood</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px">${FACES.map((f,i)=>`<button data-a="mood" data-v="${i}" aria-label="${f[1]}" style="font-size:22px;border:2px solid ${m===i?'var(--pr)':'transparent'};background:var(--inp);border-radius:10px;min-height:44px">${f[0]}</button>`).join('')}</div><div class="mu" style="margin-top:8px">${m!=null?'Feeling '+FACES[m][1].toLowerCase():'How do you feel?'}</div></div></div>
+<div class="card"><div class="lbl">Sleep Tracking<span class="mu">${sl!=null?'Last night '+sl+' h':'Not logged'}</span></div>${barsH(ds.map(k=>S.sleep[k]||0),ds.map(dl),70)}<div class="row" style="margin-top:10px;align-items:center"><button class="btn sec sm" data-a="sleep" data-v="-0.5">− 0.5 h</button><button class="btn sec sm" data-a="sleep" data-v="0.5">+ 0.5 h</button></div></div>
+<div class="card"><div class="lbl">Water<span class="mu">${w} / 8 glasses</span></div><div style="display:flex;gap:6px">${[...Array(8)].map((_,i)=>`<button data-a="water" data-v="${i+1}" aria-label="Glass ${i+1}" style="flex:1;height:40px;border-radius:8px;border:2px solid var(--pr);background:${i<w?'var(--pr)':'var(--inp)'}"></button>`).join('')}</div></div>
+<div class="card"><div class="lbl">To do list</div><div id="todos">${todoH()}</div><div class="row" style="margin-top:8px;gap:8px"><input id="nt" placeholder="New task" aria-label="New task" data-e="add" style="height:44px"><button class="btn sm" style="flex:0 0 auto" data-a="add">Add</button></div></div></main>`}
+function chat(){return`<main style="padding-bottom:8px"><h1>AI Assistant</h1><div class="card" style="flex:1;display:flex;flex-direction:column;gap:10px;min-height:0"><button data-a="mic" aria-label="Voice input" style="width:72px;height:72px;border-radius:50%;border:0;background:#111;align-self:center;flex:none;display:flex;align-items:center;justify-content:center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button>
+<div id="msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px">${S.chat.map(m=>`<div class="bub ${m.r}">${esc(m.t)}</div>`).join('')}</div>
+<div style="display:flex;gap:6px;overflow-x:auto;flex:none">${['Track my activity','Add water','My summary'].map(c=>`<button class="chip" data-a="say" data-v="${c}">${c}</button>`).join('')}</div>
+<div class="row" style="gap:8px;flex:none"><input id="ci" placeholder="Type your command" aria-label="Command" data-e="send"><button class="btn" style="flex:0 0 auto" data-a="send">Send</button></div></div></main>`}
+function score(){const d7=days(7),wk=d7.reduce((a,k)=>a+wkMin(k),0),dn=S.todos.filter(done).length,sv=d7.map(k=>S.sleep[k]).filter(x=>x!=null),sa=sv.length?sv.reduce((a,b)=>a+b,0)/sv.length:0,w=water();
+return[{n:'Workout',p:wk/150,v:wk+' min',b:d7.map(wkMin),tip:wk<150?`${150-wk} min to your weekly goal. Try a 20‑minute run.`:'Weekly goal reached. Keep it up!',a:'Log workout',go:'workout'},
+{n:'Productivity',p:dn/S.todos.length,v:dn+'/'+S.todos.length,b:d7.map((k,i)=>i<6?3+((i*5)%4):dn),tip:dn<S.todos.length?`${S.todos.length-dn} tasks left today.`:'All tasks done!',a:'Open tasks',go:'home'},
+{n:'Sleep',p:sa/8,v:sa.toFixed(1)+' h',b:d7.map(k=>S.sleep[k]||0),tip:sa<7?'Aim for 7–8 h tonight.':'Great sleep average.',a:'Log sleep',go:'home'},
+{n:'Hydration',p:w/8,v:w+'/8',b:d7.map((k,i)=>i<6?4+((i*3)%4):w),tip:w<8?`${8-w} glasses to go.`:'Fully hydrated!',a:'+1 glass',go:'water'}]}
+function reco(){return`<main><h1>AI recommendation</h1><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${score().map(c=>`<div class="card" style="padding:10px;display:flex;flex-direction:column;gap:8px"><div style="background:var(--inp);border-radius:8px;padding:6px 8px;display:flex;justify-content:space-between;font:600 12px Inter,sans-serif"><span>${c.n}</span><span>${Math.min(100,Math.round(c.p*100))}%</span></div>${barsH(c.b,days(7).map(dl),70)}<div style="text-align:center">${ring(c.p,c.v,84)}</div><div class="mu" style="min-height:48px">${c.tip}</div><button class="btn sm" data-a="go" data-v="${c.go}">${c.a}</button></div>`).join('')}</div></main>`}
+function workout(){const d=days(13),v=d.map(wkMin),mx=Math.max(...v,10),pts=v.map((x,i)=>[15+i*25.8,130-x/mx*105]);
+return`<main><h1>Workout</h1><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${[...ACT,'+ Custom'].map(a=>`<button class="tile" data-a="pick" data-v="${a}">${a}</button>`).join('')}</div>
+<div class="card"><div class="lbl">Progress (minutes / day)<span class="mu">Week ${v.slice(-7).reduce((a,b)=>a+b,0)} min</span></div><svg viewBox="0 0 350 160" width="100%" role="img" aria-label="Workout minutes, last 13 days"><polyline fill="none" stroke="#c2185b" stroke-width="2" points="${pts.map(p=>p.join(',')).join(' ')}"/>${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="#c2185b"/><text x="${p[0]}" y="${p[1]-8}" font-size="9" text-anchor="middle" fill="var(--tx)">${v[i]}</text><text x="${p[0]}" y="152" font-size="8" text-anchor="middle" fill="var(--mu)">${+d[i].slice(5,7)}/${+d[i].slice(8)}</text>`).join('')}</svg></div>
+<div class="card"><div class="lbl">Recent sessions</div>${S.wk.slice(-5).reverse().map(w=>`<div class="todo"><span>${esc(w.t)} · ${w.m} min</span><small class="mu" style="margin-left:auto">${w.d.slice(5)}</small><button class="x" style="margin-left:0" data-a="delw" data-v="${w.id}" aria-label="Delete session">✕</button></div>`).join('')||'<div class="mu">No sessions yet.</div>'}</div></main>`}
+function settings(){const sw=(k,l)=>`<div class="todo" style="justify-content:space-between"><span>${l}</span><button class="btn sm ${S.conn[k]?'':'sec'}" data-a="conn" data-v="${k}">${S.conn[k]?'Connected':'Connect'}</button></div>`;
+return`<main><h1>Settings</h1>
+<div class="card"><div class="lbl">Profile</div><div class="row" style="gap:8px"><input id="nm" value="${esc(S.user)}" aria-label="Display name" placeholder="Display name" style="height:44px"><button class="btn sm" style="flex:0 0 auto" data-a="name">Save</button></div></div>
+<div class="card"><div class="lbl">Menu (Navigation)</div>${seg(['Expanded','Collapsed'],S.nav==='expanded'?0:1,'nav')}</div>
+<div class="card"><div class="lbl">Theme</div>${seg(['Light','Dark','System'],['light','dark','system'].indexOf(S.theme),'theme')}</div>
+<div class="card"><div class="lbl">Skins</div>${seg(['Default','Semi Dark'],S.skin==='semi'?1:0,'skin')}</div>
+<div class="card"><div class="lbl">Primary Color</div><div class="sw">${COLORS.map((c,i)=>`<button class="${i===S.pr?'on':''}" style="background:${c[0]}" data-a="pr" data-v="${i}" aria-label="Color ${i+1}"></button>`).join('')}</div></div>
+<div class="card"><div class="lbl">Connect <span class="mu">demo toggles</span></div>${sw('fit','Google Fit')}${sw('health','Apple Health')}</div>
+<div class="card"><div class="lbl">Subscription</div><div class="todo" style="justify-content:space-between"><span>Plan: <b>${S.plan}</b></span><button class="btn sm sec" data-a="plan">${S.plan==='Free'?'Try Pro (demo)':'Back to Free'}</button></div></div>
+<div class="row"><button class="btn sec" data-a="reset">Reset data</button><button class="btn" data-a="logout">Log out</button></div></main>`}
+const NAV=[['home','Home','<path d="M3 11l9-8 9 8v10H3z"/>'],['workout','Workout','<path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/>'],['chat','Chat','<rect x="3" y="4" width="18" height="12" rx="3"/><path d="M8 20l3-4"/>'],['reco','AI Picks','<path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/>'],['settings','Settings','<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/>']];
+const nav=()=>`<nav>${NAV.map(n=>`<button class="${U.tab===n[0]?'on':''}" data-a="tab" data-v="${n[0]}" aria-label="${n[1]}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${n[2]}</svg>${S.nav==='expanded'?n[1]:''}</button>`).join('')}</nav>`;
+function sheet(){const s=U.sheet;if(!s)return'';let b='';
+if(s.k==='help')b=`<h1 style="font-size:20px">Help</h1><p style="margin:0;font:14px/1.5 Inter,sans-serif">Use any username and a password of 4+ characters. This is a demo, so there is no server: everything is saved only in this browser.</p><button class="btn" data-a="close">Got it</button>`;
+else b=`<h1 style="font-size:20px">${s.n==='+ Custom'?'Custom workout':esc(s.n)}</h1>${s.n==='+ Custom'?'<input id="cn" placeholder="Activity name" aria-label="Activity name">':''}<div class="row" style="align-items:center"><button class="btn sec" data-a="wm" data-v="-5">− 5</button><div style="text-align:center;font:700 24px Inter,sans-serif;flex:1.2">${s.m} min</div><button class="btn sec" data-a="wm" data-v="5">+ 5</button></div><div class="mu" style="text-align:center">≈ ${s.m*(KC[s.n]||7)} kcal</div><div class="row"><button class="btn sec" data-a="close">Cancel</button><button class="btn" data-a="logwk">Log workout</button></div>`;
+return`<div class="ov" data-a="close" data-bg="1"><div class="sheet" role="dialog">${b}</div></div>`}
+/* ---------- assistant ---------- */
+function bot(x){const s=x.toLowerCase().trim(),p=U.pend;
+if(/^(cancel|stop|never ?mind)/.test(s)){U.pend=null;return'Okay, cancelled.'}
+if(p){if(p.s==='act'){const a=ACT.find(n=>s.includes(n.toLowerCase()))||x.trim().slice(0,24);U.pend={s:'min',a};return`How many minutes of ${a}?`}
+const m=parseInt(s);if(!m||m<1||m>600)return'Please give me a number of minutes, for example 30.';logW(p.a,m);U.pend=null;return`Logged ${m} min of ${p.a} (about ${m*(KC[p.a]||7)} kcal). Nice work!`}
+if(/track|activity|workout|exercise/.test(s)){U.pend={s:'act'};return'Which activity? (Running, Boxing, Weights, Skipping, Calisthenics, or your own)'}
+if(/water|drink/.test(s)){S.water[T()]=Math.min(12,water()+1);return`Added a glass. That’s ${water()} today.`}
+const sl=s.match(/slept?\s*(?:for\s*)?(\d+(?:\.\d)?)/);if(sl){S.sleep[T()]=+sl[1];return`Logged ${sl[1]} h of sleep.`}
+const mo=FACES.findIndex(f=>s.includes(f[1].toLowerCase()));if(/mood|feel/.test(s)&&mo>=0){S.mood[T()]=mo;return`Mood set to ${FACES[mo][1].toLowerCase()} ${FACES[mo][0]}`}
+const ad=x.match(/^add (?:a )?(?:task )?(.+)/i);if(ad){S.todos.push({id:Date.now(),t:ad[1].trim(),d:false});return`Added “${ad[1].trim()}” to your to‑do list.`}
+if(/step/.test(s))return`You’re at ${steps().toLocaleString('en-US')} steps today (goal 8,000).`;
+if(/summary|how am i|progress|today/.test(s)){const c=score();return`Today: ${cal(T())} kcal burned, ${steps().toLocaleString('en-US')} steps, ${water()}/8 glasses, ${S.todos.filter(done).length}/${S.todos.length} tasks.\nWeek: ${c[0].v} of exercise, sleep avg ${c[2].v}.`}
+return'I can: track an activity, add water, log “slept 7”, set “mood good”, “add task …”, show steps or a summary.'}
+function say(x){x=x.trim();if(!x)return;S.chat.push({r:'me',t:x});render();setTimeout(()=>{S.chat.push({r:'bot',t:bot(x)});save();render()},350)}
+/* ---------- actions ---------- */
+const A={
+login(){const u=$('#u').value.trim(),p=$('#p').value;if(!u||p.length<4){$('#err').textContent=!u?'Enter a username.':'Password needs 4+ characters.';return 0}S.user=u;S.logged=true;U.tab='home'},
+help(){U.sheet={k:'help'}},close(v,e){if(e.currentTarget.dataset.bg&&e.target!==e.currentTarget)return 0;U.sheet=null},
+tab(v){U.tab=v},steps(){S.steps[T()]=steps()+500},mood(v){S.mood[T()]=+v},
+sleep(v){S.sleep[T()]=Math.max(0,Math.min(14,+((S.sleep[T()]??7)+ +v).toFixed(1)))},
+water(v){S.water[T()]=water()===+v?+v-1:+v},
+todo(v){const t=S.todos.find(x=>x.id==v);t.d=!t.d},del(v){S.todos=S.todos.filter(x=>x.id!=v)},
+add(){const i=$('#nt'),t=i.value.trim();if(!t)return 0;S.todos.push({id:Date.now(),t,d:false});U.q=''},
+say(v){say(v);return 0},send(){const i=$('#ci');const v=i.value;i.value='';say(v);return 0},
+mic(){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R){toast('Voice input isn’t supported in this browser');return 0}const r=new R();r.lang='en-US';r.onresult=e=>say(e.results[0][0].transcript);r.onerror=()=>toast('Couldn’t hear that');toast('Listening…');r.start();return 0},
+go(v){if(v==='water'){S.water[T()]=Math.min(12,water()+1)}else U.tab=v},
+pick(v){U.sheet={k:'wk',n:v,m:30}},wm(v){U.sheet.m=Math.max(5,Math.min(300,U.sheet.m+ +v));return 1},
+logwk(){let n=U.sheet.n;if(n==='+ Custom'){n=$('#cn').value.trim();if(!n){toast('Name your activity');return 0}}logW(n,U.sheet.m);toast(`Logged ${U.sheet.m} min of ${n}`);U.sheet=null},
+delw(v){S.wk=S.wk.filter(w=>w.id!=v)},
+name(){S.user=$('#nm').value.trim();toast('Saved')},nav(v){S.nav=+v?'collapsed':'expanded'},
+theme(v){S.theme=['light','dark','system'][v]},skin(v){S.skin=+v?'semi':'default'},pr(v){S.pr=+v},
+conn(v){S.conn[v]=!S.conn[v];toast(S.conn[v]?'Connected (demo only)':'Disconnected')},plan(){S.plan=S.plan==='Free'?'Pro':'Free'},
+reset(){if(confirm('Erase all data on this device?')){S=seed();U.tab='home'}else return 0},logout(){S.logged=false}};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const f=A[el.dataset.a];if(!f)return;const sc=$('main')?.scrollTop||0;if(f(el.dataset.v,{target:e.target,currentTarget:el})===0)return;save();render();const m=$('main');if(m&&!['tab','login','logout'].includes(el.dataset.a))m.scrollTop=sc});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.dataset.e)$(`[data-a="${e.target.dataset.e}"]`).click()});
+document.addEventListener('input',e=>{if(e.target.id==='q'){U.q=e.target.value;$('#todos').innerHTML=todoH()}});
+function render(){theme();const t=U.tab;$('#app').innerHTML=(S.logged?{home,workout,chat,reco,settings}[t]():login())+(S.logged?nav():'')+sheet()+'<div id="toast"></div>';
+const m=$('#msgs');if(m)m.scrollTop=m.scrollHeight}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',theme);
+render();
+</script>
+</body>
+</html>
